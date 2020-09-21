@@ -10,6 +10,12 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    test {
+        resources.srcDirs("src/test/resources")
+    }
+}
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
