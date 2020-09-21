@@ -1,11 +1,6 @@
 package ru.itmo.tpo.lab1.task3
 
-class MetalBrook(direction: Corner, state: Consistency) {
-
-    init {
-        println("$state streams of molten metal began to crawl into the $direction corner")
-    }
-
+data class MetalBrook(val direction: Corner, val state: Consistency) {
     enum class Consistency {
         FLUID, THICK
     }

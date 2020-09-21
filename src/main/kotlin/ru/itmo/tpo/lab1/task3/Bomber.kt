@@ -1,11 +1,11 @@
 package ru.itmo.tpo.lab1.task3
 
-class Bomber {
+class Bomber(val bullet: Bullet) {
     fun bombard(target: Destructible, bombsCount: Int) {
         repeat(bombsCount) {
-            target.health -= 20
-            target.temperature += 60
-            Thread.sleep(1_000)
+            target.health -= bullet.damage
+            target.temperature += bullet.temperatureIncrease
+            target.noise += bullet.noiseLevel
         }
     }
 }
