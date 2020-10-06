@@ -33,12 +33,17 @@ fun cos(param: Double, precision: Double): Double {
     var iteration = 0
     var prevFraction = 1.0
 
+    if (!param.isFinite())
+        throw IllegalArgumentException("Cos argument should be finite!")
+
+    val x = param.rem(2 * Math.PI)
+
     while (iteration < MIN_ITERATIONS ||
         (abs(currentValue - prevValue) > precision && iteration < MAX_ITERATIONS)
     ) {
         iteration += 1
         prevValue = currentValue
-        prevFraction *= -1 * param * param / (iteration * 2 - 1) / (iteration * 2)
+        prevFraction *= -1 * x * x / (iteration * 2 - 1) / (iteration * 2)
         currentValue += prevFraction
     }
 

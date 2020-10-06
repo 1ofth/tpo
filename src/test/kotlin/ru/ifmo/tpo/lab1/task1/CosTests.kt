@@ -1,5 +1,7 @@
 package ru.ifmo.tpo.lab1.task1
 
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import ru.itmo.tpo.lab1.task1.cos
@@ -57,8 +59,22 @@ class CosTests {
         template(paramReadable, param, expectedResult)
     }
 
+    @Test
+    fun `test positive infinity`() {
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            cos(Double.POSITIVE_INFINITY, DEFAULT_PRECISION)
+        }
+    }
+
+    @Test
+    fun `test negative infinity`() {
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            cos(Double.NEGATIVE_INFINITY, DEFAULT_PRECISION)
+        }
+    }
+
     private fun template(paramReadable: String, param: Double, expectedResult: Double) {
-        val actual = cos(param.toBigDecimal(), DEFAULT_PRECISION.toBigDecimal())
+        val actual = cos(param, DEFAULT_PRECISION)
         assert(abs(actual - expectedResult) <= DEFAULT_PRECISION) {
             "cos($paramReadable) should be equal $expectedResult, but was $actual"
         }
