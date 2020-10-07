@@ -22,26 +22,39 @@ class ModelTest {
     }
 
     @Test
-    fun `test temp increases after bombard`() {
-        val temperatureBefore = computerBank.temperature
-        val healthBefore = computerBank.health
+    fun `test noise increases after bombard`() {
         val noiseBefore = computerBank.noise
-        val eps = 0.000001
-        val bombsCount = 4
+        bomber.bombard(computerBank, BOMB_COUNT)
 
-        bomber.bombard(computerBank, bombsCount)
-        assert((computerBank.temperature - temperatureBefore -
-                bombsCount * bomber.bullet.temperatureIncrease) < eps) {
-            "Temperature before: $temperatureBefore, after: ${computerBank.temperature}, " +
-                    "expected: ${temperatureBefore + bombsCount * bomber.bullet.temperatureIncrease}"
-        }
-        assert((healthBefore - computerBank.health - bombsCount * bomber.bullet.damage) < eps) {
-            "Health points before: $healthBefore, after: ${computerBank.health}, " +
-                    "expected: ${healthBefore - bombsCount * bomber.bullet.damage}"
-        }
-        assert((computerBank.noise - noiseBefore - bombsCount * bomber.bullet.noiseLevel) < eps) {
+        assert((computerBank.noise - noiseBefore - BOMB_COUNT * bomber.bullet.noiseLevel) < EPS) {
             "Noise level before: $noiseBefore, after: ${computerBank.noise}, " +
-                    "expected: ${noiseBefore + bombsCount * bomber.bullet.noiseLevel}"
+                    "expected: ${noiseBefore + BOMB_COUNT * bomber.bullet.noiseLevel}"
+        }
+    }
+
+    @Test
+    fun `test temperature increases after bombard`() {
+        val temperatureBefore = computerBank.temperature
+
+        bomber.bombard(computerBank, BOMB_COUNT)
+        assert(
+            (computerBank.temperature - temperatureBefore -
+                    BOMB_COUNT * bomber.bullet.temperatureIncrease) < EPS
+        ) {
+            "Temperature before: $temperatureBefore, after: ${computerBank.temperature}, " +
+                    "expected: ${temperatureBefore + BOMB_COUNT * bomber.bullet.temperatureIncrease}"
+        }
+    }
+
+    @Test
+    fun `test health decreases after bombard`() {
+        val healthBefore = computerBank.health
+
+        bomber.bombard(computerBank, BOMB_COUNT)
+
+        assert((healthBefore - computerBank.health - BOMB_COUNT * bomber.bullet.damage) < EPS) {
+            "Health points before: $healthBefore, after: ${computerBank.health}, " +
+                    "expected: ${healthBefore - BOMB_COUNT * bomber.bullet.damage}"
         }
         assert(computerBank.frontPart.health < 30.0) {
             "FrontPart health is ${computerBank.frontPart.health}, expected less than 30.0"
@@ -49,11 +62,20 @@ class ModelTest {
     }
 
     @Test
-    fun `test metal crawl when cb is almost destroyed`() {
-        bomber.bombard(computerBank, 4)
+    fun `test metal crawl exist when cb is almost destroyed`() {
+        assert(computerBank.brooks.isEmpty()) {
+            "Brooks shouldn't exist after bombard!"
+        }
+
+        bomber.bombard(computerBank, BOMB_COUNT)
         assert(computerBank.brooks.isNotEmpty()) {
             "Brooks should exist after bombard!"
         }
+    }
+
+    @Test
+    fun `test metal crawl directions after cb is almost destroyed`() {
+        bomber.bombard(computerBank, BOMB_COUNT)
         val actualBrookDirections = computerBank.brooks.map { it.direction }
         Corner.values().forEach { corner ->
             assert(corner in actualBrookDirections) {
@@ -68,7 +90,12 @@ class ModelTest {
     @Test
     fun `test group state changed after metal crawls`() {
         assertEquals(personGroup.state, GroupState.RELAXED)
-        bomber.bombard(computerBank, 4)
+        bomber.bombard(computerBank, BOMB_COUNT)
         assertEquals(personGroup.state, GroupState.TENSE_AND_WAITING)
+    }
+
+    companion object {
+        private const val EPS = 0.000001
+        private const val BOMB_COUNT = 4
     }
 }
