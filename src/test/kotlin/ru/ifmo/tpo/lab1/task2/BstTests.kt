@@ -9,14 +9,23 @@ import java.io.PrintWriter
 import java.util.logging.LogManager
 
 class BstTests {
+    lateinit var bst: BSTNode
 
     @Test
     fun `test insert`() {
         val head = BSTNode(1)
-        head.insert(2)
+        head.insert(4)
+        head.insert(6)
+        head.insert(-3)
         val expected = listOf(
-            "INFO: insert 2 , this node key - 1",
-            "INFO: insert 2 , go to right node - null"
+            "INFO: insert 4 , this node key - 1",
+            "INFO: insert 4 , go to right node - null",
+            "INFO: insert 6 , this node key - 1",
+            "INFO: insert 6 , go to right node - 4",
+            "INFO: insert 6 , this node key - 4",
+            "INFO: insert 6 , go to right node - null",
+            "INFO: insert -3 , this node key - 1",
+            "INFO: insert -3 , go to left node - null"
         )
         val actual = prepareLogs()
         assert(actual == expected) {
@@ -30,6 +39,10 @@ class BstTests {
 
     @BeforeEach
     fun cleanLogs() {
+        bst = BSTNode(1)
+        bst.insert(3)
+        bst.insert(7)
+        bst.insert(5)
         val logFile = File(LOG_FILE_NAME)
         if (logFile.exists()) {
             val writer = PrintWriter(LOG_FILE_NAME)
