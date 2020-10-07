@@ -37,54 +37,6 @@ class BSTNode(
             }
         }
     }
-    private fun minChildNode(): BSTNode{
-        return leftChild?.minChildNode() ?: this
-    }
-//    fun delete(x: Int): BSTNode?{
-//        val left = this.leftChild
-//        val right = this.rightChild
-//
-//        when{
-//            this.key > x && left != null -> {
-//                log.log(Level.INFO, "delete $x , this node key $key , go to left node")
-//                this.leftChild = left.delete(x)
-//            }
-//            this.key < x && right != null -> {
-//                log.log(Level.INFO, "delete $x , this node key $key , go to right node")
-//                this.rightChild = right.delete(x)
-//            }
-//            left != null && right != null -> {
-//                log.log(Level.INFO, "delete $x , this node key $key , both child nodes are not null, find min child node in right subtree, right subtree key ${right.key}")
-//                this.key = right.minChildNode().key
-//                log.log(Level.INFO, "delete $x , this node key $key , min child node key in right subtree $key")
-//                this.rightChild = right.delete(this.key)
-//            }
-//            else -> {
-//                log.log(Level.INFO, "delete $x , this node key $key")
-//                when {
-//                    left != null -> {
-//                        log.log(Level.INFO, "delete $x , this node key $key, right child key is null, left child key ${left.key}")
-//                        this.key = left.key
-//                        this.leftChild = left.leftChild
-//                        this.rightChild = left.rightChild
-//                        return this
-//                    }
-//                    right != null -> {
-//                        log.log(Level.INFO, "delete $x , this node key $key, left child key is null, right child key ${right.key}")
-//                        this.key = right.key
-//                        this.leftChild = right.leftChild
-//                        this.rightChild = right.rightChild
-//                        return this
-//                    }
-//                    else -> {
-//                        log.log(Level.INFO, "delete $x , this node key $key, both child nodes are null")
-//                        return null
-//                    }
-//                }
-//            }
-//        }
-//        return null
-//    }
 
     fun delete(x: Int) {
         log.log(Level.INFO, "delete $x , this node key $key")
@@ -115,21 +67,21 @@ class BSTNode(
         }
     }
     private fun removeNode(x: BSTNode, parent: BSTNode?) {
-        x.leftChild?.let { leftChild ->
-            run {
-                x.rightChild?.let {
+        val left = x.leftChild
+        val right = x.rightChild
+        if(left != null){
+                if(right != null) {
                     log.log(Level.INFO, "delete ${x.key} , both child nodes are not null, left child ${x.leftChild?.key}, right child ${x.rightChild?.key}")
                     removeTwoChildNode(x)
-                } ?: {
+                } else {
                     log.log(Level.INFO, "delete ${x.key} , right child node is null, left child node ${x.leftChild?.key}")
-                    removeSingleChildNode(x, leftChild)
+                    removeSingleChildNode(x, left)
                 }
-            }
-        } ?: run {
-            x.rightChild?.let { rightChild -> {
+        } else {
+            if(right != null) {
                 log.log(Level.INFO, "delete ${x.key} , left child node is null, right child node ${x.rightChild?.key}")
-                removeSingleChildNode(x, rightChild)}
-            } ?: {
+                removeSingleChildNode(x, right)
+            } else {
                 log.log(Level.INFO, "delete ${x.key} , both child nodes are null")
                 removeNoChildNode(x, parent)
             }
@@ -151,11 +103,10 @@ class BSTNode(
         val left = x.leftChild!!
         left.rightChild?.let {
             val maxParent = findParentOfMaxChild(left)
-            maxParent.rightChild?.let {
+            if(maxParent.rightChild != null){
                 x.key = it.key
                 maxParent.rightChild = null
-            } ?: throw IllegalStateException("Node with max child must have the right child!")
-
+            }
         } ?: run {
             x.key = left.key
             x.leftChild = left.leftChild
@@ -164,17 +115,17 @@ class BSTNode(
 
 
     }
-    private fun findParentOfMaxChild(n: BSTNode): BSTNode {
-        return n.rightChild?.let { r -> r.rightChild?.let { findParentOfMaxChild(r) } ?: n }
-                ?: throw IllegalArgumentException("Right child must be non-null")
-
+    private fun findParentOfMaxChild(x: BSTNode): BSTNode {
+        val right = x.rightChild
+        if(right != null){
+            return findParentOfMaxChild(right)
+        }else return x
     }
     private fun removeSingleChildNode(parent: BSTNode, child: BSTNode) {
         parent.key = child.key
         parent.leftChild = child.leftChild
         parent.rightChild = child.rightChild
-        log.log(Level.INFO, "delete node which had with single child, new values ${parent.key}, ${parent.leftChild?.key}, ${parent.rightChild?.key}")
-
+        log.log(Level.INFO, "delete node which had single child, new values ${parent.key}, ${parent.leftChild?.key}, ${parent.rightChild?.key}")
     }
 
     fun printBST(){

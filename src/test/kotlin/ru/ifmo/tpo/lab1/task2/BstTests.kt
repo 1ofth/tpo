@@ -1,5 +1,6 @@
 package ru.ifmo.tpo.lab1.task2
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -72,33 +73,36 @@ class BstTests {
         bst.insert(4)
         bst.insert(6)
         bst.insert(-3)
+        bst.insert(-1)
         bst.insert(2)
         bst.insert(5)
         bst.delete(4)
         bst.delete(6)
         bst.delete(-3)
+        bst.delete(5)
+        bst.delete(1)
         val expected = listOf(
-            "INFO: delete 4 , this node key 1 , go to right node"
-        /*
-
-        INFO: delete 4 , this node key 1,
-        INFO: delete 4 , this node key 4,
-        INFO: delete 4 , both child nodes are not null, left child 2, right child 6,
-        INFO: delete node which had two child nodes, found max child node 2 in left subtree, null, 6]
-
-        INFO: delete 4 , this node key 1,
-        INFO: delete 4 , this node key 4,
-        INFO: delete 4 , both child nodes are not null, left child 2, right child 6,
-        INFO: delete node which had two child nodes, found max child node 2 in left subtree, null, 6,
-        INFO: delete 6 , this node key 1,
-        INFO: delete 6 , this node key 2,
-        INFO: delete 6 , this node key 6,
-        INFO: delete -3 , this node key 1,
-        INFO: delete -3 , this node key -3]
-
-
-         */
-
+            "INFO: delete 4 , this node key 1",
+            "INFO: delete 4 , this node key 4",
+            "INFO: delete 4 , both child nodes are not null, left child 2, right child 6",
+            "INFO: delete node which had two child nodes, found max child node 2 in left subtree, null, 6",
+            "INFO: delete 6 , this node key 1",
+            "INFO: delete 6 , this node key 2",
+            "INFO: delete 6 , this node key 6",
+            "INFO: delete 6 , right child node is null, left child node 5",
+            "INFO: delete node which had single child, new values 5, null, null",
+            "INFO: delete -3 , this node key 1",
+            "INFO: delete -3 , this node key -3",
+            "INFO: delete -3 , left child node is null, right child node -1",
+            "INFO: delete node which had single child, new values -1, null, null",
+            "INFO: delete 5 , this node key 1",
+            "INFO: delete 5 , this node key 2",
+            "INFO: delete 5 , this node key 5",
+            "INFO: delete 5 , both child nodes are null",
+            "INFO: delete node without child nodes, null, null",
+            "INFO: delete 1 , this node key 1",
+            "INFO: delete 1 , both child nodes are not null, left child -1, right child 2",
+            "INFO: delete node which had two child nodes, found max child node -1 in left subtree, null, 2"
         )
         val actual = File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO: delete") }
         assertEquals(expected, actual) {
@@ -106,10 +110,13 @@ class BstTests {
         }
     }
 
-//    private fun prepareLogs(): List<String> {
-//        return File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO") }
-//    }
-
+    @Test
+    fun `test delete root`() {
+        val bst = BSTNode(1)
+        Assertions.assertThrows(IllegalStateException::class.java) {
+            bst.delete(1)
+        }
+    }
     @BeforeEach
     fun cleanLogs() {
         val logFile = File(LOG_FILE_NAME)
