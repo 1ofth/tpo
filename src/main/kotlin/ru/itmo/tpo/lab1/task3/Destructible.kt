@@ -4,6 +4,7 @@ interface Destructible {
     var health: Double
     var temperature: Double
     var noise: Double
-
+    var isBombard: Boolean
+    var isMelted: Boolean
     fun destroy() {}
 }

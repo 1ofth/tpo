@@ -7,6 +7,15 @@ open class ComputerBank(
 ) : Destructible {
     val brooks = mutableListOf<MetalBrook>()
 
+    override var isMelted: Boolean = false
+
+    override var isBombard: Boolean = false
+        set(value) {
+            frontPart.isBombard = value
+            endPart.isBombard = value
+            field = value
+        }
+
     override var noise: Double = (frontPart.noise + endPart.noise) / 2
         set(value) {
             frontPart.noise -= (field - value)
@@ -29,6 +38,7 @@ open class ComputerBank(
         }
 
     override fun destroy() {
+        isMelted = true
         Corner.values().forEach {
             brooks += MetalBrook(it, MetalBrook.Consistency.THICK)
         }

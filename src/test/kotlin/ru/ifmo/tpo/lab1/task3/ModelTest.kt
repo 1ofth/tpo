@@ -1,8 +1,10 @@
 package ru.ifmo.tpo.lab1.task3
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.function.Executable
 import ru.itmo.tpo.lab1.task3.*
 
 class ModelTest {
@@ -92,6 +94,33 @@ class ModelTest {
         assertEquals(personGroup.state, GroupState.RELAXED)
         bomber.bombard(computerBank, BOMB_COUNT)
         assertEquals(personGroup.state, GroupState.TENSE_AND_WAITING)
+    }
+
+    @Test
+    fun `test bombard is false before bombard`() {
+        Assertions.assertAll(
+            Executable { assert(!computerBank.isBombard)},
+            Executable { assert(!computerBank.frontPart.isBombard)},
+            Executable { assert(!computerBank.endPart.isBombard)}
+        )
+    }
+
+    @Test
+    fun `test computer isn't melted before bombard`() {
+        Assertions.assertAll(
+            Executable { assert(!computerBank.isMelted)},
+            Executable { assert(!computerBank.frontPart.isMelted)},
+            Executable { assert(!computerBank.endPart.isMelted)}
+        )
+    }
+
+    @Test
+    fun `test computer is melted after bombard`() {
+        bomber.bombard(computerBank, BOMB_COUNT)
+        Assertions.assertAll(
+            Executable { assert(computerBank.isMelted)},
+            Executable { assert(computerBank.frontPart.isMelted)},
+        )
     }
 
     companion object {
