@@ -82,16 +82,10 @@ class BstTests {
         /*
 
 
-        INFO: delete 4 , this node key 1 , go to right node,
-        INFO: delete 4 , this node key 4 , both child nodes are not null, find min child node in right subtree, right subtree key 6,
-        INFO: delete 4 , this node key 5 , min child node key in right subtree 5,
-        INFO: delete 5 , this node key 6 , go to left node,
-        INFO: delete 5 , this node key 5,
-        INFO: delete 5 , this node key 5, both child nodes are null,
-        INFO: delete 6 , this node key 1,
-        INFO: delete 6 , this node key 1, right child key is null, left child key -3,
-        INFO: delete -3 , this node key -3,
-        INFO: delete -3 , this node key -3, both child nodes are null]
+
+        INFO: delete 4 , this node key 1,
+        INFO: delete 4 , this node key 4,
+        INFO: delete 4 , both child nodes are not null, left child 2, right child 6
 
          */
         )

@@ -100,28 +100,37 @@ class BSTNode(
             return
         }
         when {
-            x > node.key -> scan(x, node.rightChild, node)
-            x < node.key -> scan(x, node.leftChild, node)
-            x == node.key -> removeNode(node, parent)
+            x > node.key -> {
+                log.log(Level.INFO, "delete $x , this node key ${node.key}")
+                scan(x, node.rightChild, node)
+            }
+            x < node.key -> {
+                log.log(Level.INFO, "delete $x , this node key ${node.key}")
+                scan(x, node.leftChild, node)
+            }
+            x == node.key -> {
+                log.log(Level.INFO, "delete $x , this node key ${node.key}")
+                removeNode(node, parent)
+            }
         }
     }
     private fun removeNode(x: BSTNode, parent: BSTNode?) {
         x.leftChild?.let { leftChild ->
             run {
                 x.rightChild?.let {
-                    log.log(Level.INFO, "delete $x , both child nodes are not null, left child ${x.leftChild}, right child ${x.rightChild}")
+                    log.log(Level.INFO, "delete ${x.key} , both child nodes are not null, left child ${x.leftChild?.key}, right child ${x.rightChild?.key}")
                     removeTwoChildNode(x)
                 } ?: {
-                    log.log(Level.INFO, "delete $x , right child node is null, left child node $leftChild")
+                    log.log(Level.INFO, "delete ${x.key} , right child node is null, left child node ${x.leftChild}")
                     removeSingleChildNode(x, leftChild)
                 }
             }
         } ?: run {
             x.rightChild?.let { rightChild -> {
-                log.log(Level.INFO, "delete $x , left child node is null, right child node $rightChild")
+                log.log(Level.INFO, "delete ${x.key} , left child node is null, right child node ${x.rightChild}")
                 removeSingleChildNode(x, rightChild)}
             } ?: {
-                log.log(Level.INFO, "delete $x , both child nodes are null")
+                log.log(Level.INFO, "delete ${x.key} , both child nodes are null")
                 removeNoChildNode(x, parent)
             }
         }
