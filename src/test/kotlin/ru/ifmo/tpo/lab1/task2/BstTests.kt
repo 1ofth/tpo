@@ -1,5 +1,6 @@
 package ru.ifmo.tpo.lab1.task2
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -9,40 +10,103 @@ import java.io.PrintWriter
 import java.util.logging.LogManager
 
 class BstTests {
-    lateinit var bst: BSTNode
 
     @Test
     fun `test insert`() {
-        val head = BSTNode(1)
-        head.insert(4)
-        head.insert(6)
-        head.insert(-3)
+        val bst = BSTNode(1)
+        bst.insert(4)
+        bst.insert(6)
+        bst.insert(-3)
+        bst.insert(2)
+        bst.insert(5)
         val expected = listOf(
-            "INFO: insert 4 , this node key - 1",
-            "INFO: insert 4 , go to right node - null",
-            "INFO: insert 6 , this node key - 1",
-            "INFO: insert 6 , go to right node - 4",
-            "INFO: insert 6 , this node key - 4",
-            "INFO: insert 6 , go to right node - null",
-            "INFO: insert -3 , this node key - 1",
-            "INFO: insert -3 , go to left node - null"
+            "INFO: insert 4 , this node key 1",
+            "INFO: insert 4 , go to right node null",
+            "INFO: insert 6 , this node key 1",
+            "INFO: insert 6 , go to right node 4",
+            "INFO: insert 6 , this node key 4",
+            "INFO: insert 6 , go to right node null",
+            "INFO: insert -3 , this node key 1",
+            "INFO: insert -3 , go to left node null",
+            "INFO: insert 2 , this node key 1",
+            "INFO: insert 2 , go to right node 4",
+            "INFO: insert 2 , this node key 4",
+            "INFO: insert 2 , go to left node null",
+            "INFO: insert 5 , this node key 1",
+            "INFO: insert 5 , go to right node 4",
+            "INFO: insert 5 , this node key 4",
+            "INFO: insert 5 , go to right node 6",
+            "INFO: insert 5 , this node key 6",
+            "INFO: insert 5 , go to left node null"
         )
-        val actual = prepareLogs()
-        assert(actual == expected) {
+        val actual = File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO: insert") }
+        assertEquals(expected, actual) {
             "Expected $expected, was $actual"
         }
     }
 
-    private fun prepareLogs(): List<String> {
-        return File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO") }
+    @Test
+    fun `test find`() {
+        val bst = BSTNode(1)
+        bst.insert(4)
+        bst.insert(6)
+        bst.insert(-3)
+        bst.find(4)
+        bst.find(10)
+        val expected = listOf(
+            "INFO: find 4 , this node key 1",
+            "INFO: find 4 , this node key 4",
+            "INFO: find 10 , this node key 1",
+            "INFO: find 10 , this node key 4",
+            "INFO: find 10 , this node key 6"
+        )
+        val actual = File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO: find") }
+        assertEquals(expected, actual) {
+            "Expected $expected, was $actual"
+        }
     }
+
+    @Test
+    fun `test delete`() {
+        val bst = BSTNode(1)
+        bst.insert(4)
+        bst.insert(6)
+        bst.insert(-3)
+        bst.insert(2)
+        bst.insert(5)
+        bst.delete(4)
+        //bst.delete(6)
+        //bst.delete(-3)
+        val expected = listOf(
+            "INFO: delete 4 , this node key 1 , go to right node"
+        /*
+
+
+        INFO: delete 4 , this node key 1 , go to right node,
+        INFO: delete 4 , this node key 4 , both child nodes are not null, find min child node in right subtree, right subtree key 6,
+        INFO: delete 4 , this node key 5 , min child node key in right subtree 5,
+        INFO: delete 5 , this node key 6 , go to left node,
+        INFO: delete 5 , this node key 5,
+        INFO: delete 5 , this node key 5, both child nodes are null,
+        INFO: delete 6 , this node key 1,
+        INFO: delete 6 , this node key 1, right child key is null, left child key -3,
+        INFO: delete -3 , this node key -3,
+        INFO: delete -3 , this node key -3, both child nodes are null]
+
+         */
+        )
+        val actual = File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO: delete") }
+        assertEquals(expected, actual) {
+            "Expected $expected, was $actual"
+        }
+    }
+
+//    private fun prepareLogs(): List<String> {
+//        return File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO") }
+//    }
 
     @BeforeEach
     fun cleanLogs() {
-        bst = BSTNode(1)
-        bst.insert(3)
-        bst.insert(7)
-        bst.insert(5)
         val logFile = File(LOG_FILE_NAME)
         if (logFile.exists()) {
             val writer = PrintWriter(LOG_FILE_NAME)
