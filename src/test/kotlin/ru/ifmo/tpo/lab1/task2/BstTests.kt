@@ -75,19 +75,30 @@ class BstTests {
         bst.insert(2)
         bst.insert(5)
         bst.delete(4)
-        //bst.delete(6)
-        //bst.delete(-3)
+        bst.delete(6)
+        bst.delete(-3)
         val expected = listOf(
             "INFO: delete 4 , this node key 1 , go to right node"
         /*
 
-
+        INFO: delete 4 , this node key 1,
+        INFO: delete 4 , this node key 4,
+        INFO: delete 4 , both child nodes are not null, left child 2, right child 6,
+        INFO: delete node which had two child nodes, found max child node 2 in left subtree, null, 6]
 
         INFO: delete 4 , this node key 1,
         INFO: delete 4 , this node key 4,
-        INFO: delete 4 , both child nodes are not null, left child 2, right child 6
+        INFO: delete 4 , both child nodes are not null, left child 2, right child 6,
+        INFO: delete node which had two child nodes, found max child node 2 in left subtree, null, 6,
+        INFO: delete 6 , this node key 1,
+        INFO: delete 6 , this node key 2,
+        INFO: delete 6 , this node key 6,
+        INFO: delete -3 , this node key 1,
+        INFO: delete -3 , this node key -3]
+
 
          */
+
         )
         val actual = File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO: delete") }
         assertEquals(expected, actual) {

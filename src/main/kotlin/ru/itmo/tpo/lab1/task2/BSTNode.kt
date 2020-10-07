@@ -121,13 +121,13 @@ class BSTNode(
                     log.log(Level.INFO, "delete ${x.key} , both child nodes are not null, left child ${x.leftChild?.key}, right child ${x.rightChild?.key}")
                     removeTwoChildNode(x)
                 } ?: {
-                    log.log(Level.INFO, "delete ${x.key} , right child node is null, left child node ${x.leftChild}")
+                    log.log(Level.INFO, "delete ${x.key} , right child node is null, left child node ${x.leftChild?.key}")
                     removeSingleChildNode(x, leftChild)
                 }
             }
         } ?: run {
             x.rightChild?.let { rightChild -> {
-                log.log(Level.INFO, "delete ${x.key} , left child node is null, right child node ${x.rightChild}")
+                log.log(Level.INFO, "delete ${x.key} , left child node is null, right child node ${x.rightChild?.key}")
                 removeSingleChildNode(x, rightChild)}
             } ?: {
                 log.log(Level.INFO, "delete ${x.key} , both child nodes are null")
@@ -143,6 +143,8 @@ class BSTNode(
                 p.rightChild = null
             }
         } ?: throw IllegalStateException("Can not remove the root node without child nodes")
+        log.log(Level.INFO, "delete node without child nodes, ${x.leftChild?.key}, ${x.rightChild?.key}")
+
 
     }
     private fun removeTwoChildNode(x: BSTNode) {
@@ -158,6 +160,8 @@ class BSTNode(
             x.key = left.key
             x.leftChild = left.leftChild
         }
+        log.log(Level.INFO, "delete node which had two child nodes, found max child node ${x.key} in left subtree, ${x.leftChild?.key}, ${x.rightChild?.key}")
+
 
     }
     private fun findParentOfMaxChild(n: BSTNode): BSTNode {
@@ -169,6 +173,8 @@ class BSTNode(
         parent.key = child.key
         parent.leftChild = child.leftChild
         parent.rightChild = child.rightChild
+        log.log(Level.INFO, "delete node which had with single child, new values ${parent.key}, ${parent.leftChild?.key}, ${parent.rightChild?.key}")
+
     }
 
     fun printBST(){
