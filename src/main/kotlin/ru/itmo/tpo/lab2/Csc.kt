@@ -2,12 +2,12 @@ package ru.itmo.tpo.lab2
 
 import kotlin.math.PI
 
-class Csc {
-    private val sin = Sin()
+class Csc(precision: Double) {
+    private val sin = Sin(precision)
 
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double, precision: Double): Double {
+    fun calc(param: Double): Double {
         require(param % PI != 0.0)
-        return 1 / sin.calc(param, precision)
+        return 1 / sin.calc(param)
     }
 }

@@ -3,16 +3,16 @@ package ru.itmo.tpo.lab2
 import kotlin.math.PI
 import kotlin.math.abs
 
-class Sec {
-    private val cos = Cos()
+class Sec(precision: Double) {
+    private val cos = Cos(precision)
 
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double, precision: Double): Double {
+    fun calc(param: Double): Double {
         require(abs(param - PI / 2) % PI != 0.0)
-        return 1 / cos.calc(param, precision)
+        return 1 / cos.calc(param)
     }
 }
 
 fun main() {
-    println(Sec().calc(PI + PI / 2, 0.00001))
+    println(Sec(1e-6).calc(PI + PI / 2))
 }

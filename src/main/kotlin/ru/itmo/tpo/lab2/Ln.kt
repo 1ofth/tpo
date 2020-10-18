@@ -3,10 +3,10 @@ package ru.itmo.tpo.lab2
 import kotlin.math.abs
 import kotlin.math.ln
 
-class Ln {
+class Ln(private val precision: Double) {
 
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double, precision: Double): Double {
+    fun calc(param: Double): Double {
         require(param.isFinite())
         require(param >= 0)
 
@@ -31,8 +31,9 @@ class Ln {
 }
 
 fun main() {
-    println("" + Ln().calc(0.5, 1e-6) + " " + ln(0.5))
-    println("" + Ln().calc(1.5, 1e-6) + " " + ln(1.5))
-    println("" + Ln().calc(Math.E, 1e-6)+ " " + ln(Math.E))
-    println("" + Ln().calc(Math.E * Math.E, 1e-6)+ " " + ln(Math.E*Math.E))
+    val ln = Ln(1e-6)
+    println("" + ln.calc(0.5) + " " + ln(0.5))
+    println("" + ln.calc(1.5) + " " + ln(1.5))
+    println("" + ln.calc(Math.E)+ " " + ln(Math.E))
+    println("" + ln.calc(Math.E * Math.E)+ " " + ln(Math.E*Math.E))
 }

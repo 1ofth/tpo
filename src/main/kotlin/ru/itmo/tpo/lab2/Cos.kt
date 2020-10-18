@@ -4,9 +4,9 @@ import kotlin.jvm.Throws
 import kotlin.math.PI
 import kotlin.math.abs
 
-class Cos {
+class Cos(private val precision: Double) {
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double, precision: Double): Double {
+    fun calc(param: Double): Double {
         var prevValue = Double.MIN_VALUE
         var currentValue = 1.0
         var iteration = 0

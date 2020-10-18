@@ -2,20 +2,20 @@ package ru.itmo.tpo.lab2
 
 import kotlin.math.pow
 
-class TrigonometricExpr {
-    val cot = Cot()
-    val csc = Csc()
-    val sin = Sin()
-    val sec = Sec()
-    val cos = Cos()
+class TrigonometricExpr(precision: Double) {
+    val cot = Cot(precision)
+    val csc = Csc(precision)
+    val sin = Sin(precision)
+    val sec = Sec(precision)
+    val cos = Cos(precision)
 
     @Throws(IllegalArgumentException::class)
-    fun compute(x: Double, eps: Double): Double {
+    fun calc(x: Double): Double {
         require(x <= 0)
 
-        val firstPart = ((cot.calc(x, eps) * csc.calc(x, eps)).pow(2)).pow(2) + cot.calc(x, eps)
-        val secondPartNumerator = sin.calc(x, eps) / ((sec.calc(x, eps) + cos.calc(x, eps)) - sec.calc(x, eps))
-        val secondPartDenominator = (cos.calc(x, eps) + sin.calc(x, eps)) * cot.calc(x, eps) - csc.calc(x, eps)
+        val firstPart = ((cot.calc(x) * csc.calc(x)).pow(2)).pow(2) + cot.calc(x)
+        val secondPartNumerator = sin.calc(x) / ((sec.calc(x) + cos.calc(x)) - sec.calc(x))
+        val secondPartDenominator = (cos.calc(x) + sin.calc(x)) * cot.calc(x) - csc.calc(x)
 
         return firstPart - secondPartNumerator / secondPartDenominator
     }

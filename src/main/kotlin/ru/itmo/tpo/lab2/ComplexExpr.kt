@@ -1,15 +1,15 @@
 package ru.itmo.tpo.lab2
 
-class ComplexExpr {
-    val firstExpr = TrigonometricExpr()
-    val secondExpr = LogExpr()
+class ComplexExpr(precision: Double) {
+    val firstExpr = TrigonometricExpr(precision)
+    val secondExpr = LogExpr(precision)
 
     @Throws(IllegalArgumentException::class)
-    fun compute(x: Double, eps: Double): Double {
+    fun calc(x: Double): Double {
         return if (x <= 0) {
-            firstExpr.compute(x, eps)
+            firstExpr.calc(x)
         } else {
-            secondExpr.compute(x, eps)
+            secondExpr.calc(x)
         }
     }
 }
