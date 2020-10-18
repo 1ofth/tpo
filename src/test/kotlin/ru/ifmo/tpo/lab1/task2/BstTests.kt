@@ -13,6 +13,19 @@ import java.util.logging.LogManager
 class BstTests {
 
     @Test
+    fun `test insert exist`() {
+        val bst = BSTNode(1)
+        bst.insert(1)
+        val expected = listOf(
+            "INFO: insert 1 , this node key 1"
+        )
+        val actual = File(LOG_FILE_NAME).readLines().filter { it.startsWith("INFO: insert") }
+        assertEquals(expected, actual) {
+            "Expected $expected, was $actual"
+        }
+    }
+
+    @Test
     fun `test insert`() {
         val bst = BSTNode(1)
         bst.insert(4)

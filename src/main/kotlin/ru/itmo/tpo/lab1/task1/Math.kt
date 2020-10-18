@@ -2,6 +2,7 @@ package ru.itmo.tpo.lab1.task1
 
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.jvm.Throws
 import kotlin.math.abs
 
 fun cos(param: BigDecimal, precision: BigDecimal): Double {
@@ -27,6 +28,7 @@ fun cos(param: BigDecimal, precision: BigDecimal): Double {
     return currentValue.toDouble()
 }
 
+@Throws(IllegalArgumentException::class)
 fun cos(param: Double, precision: Double): Double {
     var prevValue = Double.MIN_VALUE
     var currentValue = 1.0
