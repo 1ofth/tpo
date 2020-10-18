@@ -5,9 +5,9 @@ import kotlin.math.pow
 class TrigonometricExpr(precision: Double) {
     val cot = Cot(precision)
     val csc = Csc(precision)
-    val sin = Sin(precision)
-    val sec = Sec(precision)
     val cos = Cos(precision)
+    val sin = Sin(cos, precision)
+    val sec = Sec(precision)
 
     @Throws(IllegalArgumentException::class)
     fun calc(x: Double): Double {

@@ -5,9 +5,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sin(precision: Double) {
-
-    private val cos = Cos(precision * precision)
+class Sin(private val cos: Cos, precision: Double = DEFAULT_PRECISION) {
 
     private fun prepare(x: Double): Double {
         require(x.isFinite())

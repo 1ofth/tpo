@@ -5,7 +5,7 @@ import kotlin.math.abs
 
 class Cot(precision: Double) {
     private val cos = Cos(precision)
-    private val sin = Sin(precision)
+    private val sin = Sin(cos, precision)
 
     private fun prepare(x: Double): Double {
         require(x.isFinite())
