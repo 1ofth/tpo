@@ -2,12 +2,13 @@ package ru.itmo.tpo.lab2
 
 import kotlin.math.pow
 
-class TrigonometricExpr(precision: Double) {
-    val cot = Cot(precision)
-    val csc = Csc(precision)
-    val cos = Cos(precision)
-    val sin = Sin(cos, precision)
-    val sec = Sec(precision)
+class TrigonometricExpr(
+    private val cot: Cot,
+    private val csc: Csc,
+    private val cos: Cos,
+    private val sin: Sin,
+    private val sec: Sec
+) {
 
     @Throws(IllegalArgumentException::class)
     fun calc(x: Double): Double {

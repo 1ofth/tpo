@@ -4,7 +4,7 @@ import kotlin.jvm.Throws
 import kotlin.math.PI
 import kotlin.math.abs
 
-class Cos(private val precision: Double = DEFAULT_PRECISION) {
+open class Cos(private val precision: Double = DEFAULT_PRECISION) {
 
     @Throws(IllegalArgumentException::class)
     fun calc(param: Double): Double {
