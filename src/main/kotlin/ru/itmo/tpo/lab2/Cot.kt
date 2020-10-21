@@ -6,7 +6,7 @@ import kotlin.math.abs
 class Cot(
     private val cos: Cos,
     private val sin: Sin
-) {
+) : Calculator {
 
     private fun prepare(x: Double): Double {
         require(x.isFinite())
@@ -15,7 +15,7 @@ class Cot(
     }
 
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double): Double {
+    override fun calc(param: Double): Double {
         val x = prepare(param)
         val result = cos.calc(param) / sin.calc(param)
         return if (abs(x) <= PI / 2) result else -result

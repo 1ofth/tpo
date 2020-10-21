@@ -5,7 +5,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sin(private val cos: Cos) {
+class Sin(private val cos: Cos) : Calculator {
 
     private fun prepare(x: Double): Double {
         require(x.isFinite())
@@ -14,7 +14,7 @@ class Sin(private val cos: Cos) {
     }
 
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double): Double {
+    override fun calc(param: Double): Double {
         val x = prepare(param)
         val result = sqrt(abs(1 - cos.calc(param).pow(2)))
         return if (abs(x) <= PI / 2 || abs(x) >= 3 * PI / 2) result else -result

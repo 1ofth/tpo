@@ -3,14 +3,14 @@ package ru.itmo.tpo.lab2
 class ComplexExpr(
     private val tExpr: TrigonometricExpr,
     private val lExpr: LogExpr,
-) {
+) : Calculator {
 
     @Throws(IllegalArgumentException::class)
-    fun calc(x: Double): Double {
-        return if (x <= 0) {
-            tExpr.calc(x)
+    override fun calc(param: Double): Double {
+        return if (param <= 0) {
+            tExpr.calc(param)
         } else {
-            lExpr.calc(x)
+            lExpr.calc(param)
         }
     }
 }

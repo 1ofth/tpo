@@ -3,10 +3,10 @@ package ru.itmo.tpo.lab2
 import kotlin.math.abs
 import kotlin.math.ln
 
-class Ln(private val precision: Double) {
+class Ln(private val precision: Double) : Calculator {
 
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double): Double {
+    override fun calc(param: Double): Double {
         require(param.isFinite())
         require(param >= 0)
 

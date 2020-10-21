@@ -4,10 +4,10 @@ import kotlin.jvm.Throws
 import kotlin.math.PI
 import kotlin.math.abs
 
-open class Cos(private val precision: Double = DEFAULT_PRECISION) {
+class Cos(private val precision: Double = DEFAULT_PRECISION) : Calculator {
 
     @Throws(IllegalArgumentException::class)
-    fun calc(param: Double): Double {
+    override fun calc(param: Double): Double {
         var prevValue = Double.MIN_VALUE
         var currentValue = 1.0
         var iteration = 0
