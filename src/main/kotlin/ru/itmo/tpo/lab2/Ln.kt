@@ -3,7 +3,7 @@ package ru.itmo.tpo.lab2
 import kotlin.math.abs
 import kotlin.math.ln
 
-class Ln(private val precision: Double) : Calculator {
+class Ln(private val precision: Double = DEFAULT_PRECISION) : Calculator {
 
     @Throws(IllegalArgumentException::class)
     override fun calc(param: Double): Double {

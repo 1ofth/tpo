@@ -15,9 +15,7 @@ val trigExprStub: TrigonometricExpr = mock(TrigonometricExpr::class.java).apply 
 }
 
 val cosStub: Cos = mock(Cos::class.java).apply {
-    `when`(this.calc(2.0)).thenReturn(-0.416146)
     `when`(this.calc(0.0)).thenReturn(1.0)
-
     `when`(this.calc(-0.4)).thenReturn(0.9210609940028851)
     `when`(this.calc(-0.7)).thenReturn(0.7648421872844885)
     `when`(this.calc(-1.15)).thenReturn(0.4084874408841574)

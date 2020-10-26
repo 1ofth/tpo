@@ -1,21 +1,24 @@
 package ru.ifmo.tpo.lab2
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.junit.jupiter.MockitoExtension
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import ru.itmo.tpo.lab2.*
-import kotlin.math.sin
 
-@ExtendWith(MockitoExtension::class)
 class SinTest {
+    private lateinit var function: Sin
 
-    @InjectMocks
-    val mySin: Sin = Sin(cosStub)
+    @ParameterizedTest(name = "sin expr({0}) = {1}")
+    @CsvSource()
+    fun `cos stubbed`(param: Double, expectedResult: Double) {
+        function = Sin(cosStub)
+        Assertions.assertEquals(expectedResult, function.calc(param), DEFAULT_PRECISION)
+    }
 
-    @Test
-    fun testSuccess() {
-        assertEquals(sin(1.0), mySin.calc(1.0), DEFAULT_PRECISION)
+    @ParameterizedTest(name = "sin expr({0}) = {1}")
+    @CsvSource()
+    fun `without stubs`(param: Double, expectedResult: Double) {
+        function = Sin(Cos())
+        Assertions.assertEquals(expectedResult, function.calc(param), DEFAULT_PRECISION)
     }
 }
