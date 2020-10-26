@@ -7,7 +7,7 @@ class Sec(private val cos: Cos) : Calculator {
 
     @Throws(IllegalArgumentException::class)
     override fun calc(param: Double): Double {
-        require(abs(param - PI / 2) % PI != 0.0)
+        require(abs(param - PI / 2) % PI > cos.precision)
         return 1 / cos.calc(param)
     }
 }

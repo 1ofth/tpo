@@ -3,6 +3,7 @@ package ru.ifmo.tpo.lab2
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import ru.itmo.tpo.lab2.Cos
 import ru.itmo.tpo.lab2.Cot
@@ -40,6 +41,15 @@ class CotTest {
     fun `without stubs`(param: Double, expectedResult: Double) {
         function = Cot(Cos(), Sin(cosStub))
         Assertions.assertEquals(expectedResult, function.calc(param), DEFAULT_PRECISION)
+    }
+
+    @ParameterizedTest(name = "IEA cot({0})")
+    @CsvSource("0.0", "3.14159265359", "-31.4159265359")
+    fun `test IAE`(param: Double) {
+        function = Cot(Cos(), Sin(cosStub))
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            function.calc(param)
+        }
     }
 
     companion object {

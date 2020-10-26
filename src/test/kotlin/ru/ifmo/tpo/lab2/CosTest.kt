@@ -9,7 +9,6 @@ import kotlin.math.abs
 
 class CosTest {
 
-
     @ParameterizedTest(name = "cos({0}) = 0.0")
     @CsvSource(
             "pi/2, 1.57079632679", "-pi/2, -1.57079632679",

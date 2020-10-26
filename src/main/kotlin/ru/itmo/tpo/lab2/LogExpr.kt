@@ -1,5 +1,4 @@
 package ru.itmo.tpo.lab2
-
 import kotlin.math.pow
 
 class LogExpr(

@@ -47,11 +47,8 @@ class FunctionTest {
 
     companion object {
         @JvmStatic
-        private val systemTestData = mapOf(11110.0 to 1.0)
-
-        @JvmStatic
         fun getTestValues(): Stream<Arguments> {
-            return systemTestData.mapNotNull { of(it.key, it.value) }.stream()
+            return (trigExprTestData + logExprTestData).mapNotNull { of(it.key, it.value) }.stream()
         }
     }
 }

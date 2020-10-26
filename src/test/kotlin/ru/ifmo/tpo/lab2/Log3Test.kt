@@ -26,6 +26,7 @@ class Log3Test {
         function = Log3(Ln())
         Assertions.assertEquals(expectedResult, function.calc(param), DEFAULT_PRECISION)
     }
+
     companion object {
         @JvmStatic
         fun getTestValues(): Stream<Arguments> {

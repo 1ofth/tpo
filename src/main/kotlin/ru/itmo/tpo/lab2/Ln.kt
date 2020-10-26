@@ -8,7 +8,7 @@ class Ln(private val precision: Double = DEFAULT_PRECISION) : Calculator {
     @Throws(IllegalArgumentException::class)
     override fun calc(param: Double): Double {
         require(param.isFinite())
-        require(param >= 0)
+        require(param > 0)
 
         val x = (param - 1) / (param + 1)
 
@@ -28,13 +28,4 @@ class Ln(private val precision: Double = DEFAULT_PRECISION) : Calculator {
 
         return currentValue * 2
     }
-}
-
-fun main() {
-    val ln = Ln(1e-6)
-    println("" + ln.calc(1.0) + " " + ln(1.0))
-    println("" + ln.calc(0.5) + " " + ln(0.5))
-    println("" + ln.calc(1.5) + " " + ln(1.5))
-    println("" + ln.calc(Math.E)+ " " + ln(Math.E))
-    println("" + ln.calc(Math.E * Math.E)+ " " + ln(Math.E*Math.E))
 }

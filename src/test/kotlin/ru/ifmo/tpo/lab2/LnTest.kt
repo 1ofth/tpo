@@ -3,8 +3,7 @@ package ru.ifmo.tpo.lab2
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import ru.itmo.tpo.lab2.DEFAULT_PRECISION
-import ru.itmo.tpo.lab2.Ln
+import ru.itmo.tpo.lab2.*
 
 class LnTest {
 
@@ -22,5 +21,13 @@ class LnTest {
             "50.0, 3.912023")
     fun successValidation(param: Double, expectedResult: Double) {
         Assertions.assertEquals(expectedResult, function.calc(param), DEFAULT_PRECISION)
+    }
+
+    @ParameterizedTest(name = "IEA cot({0})")
+    @CsvSource("0.0", "-1.0")
+    fun `test IAE`(param: Double) {
+        Assertions.assertThrows(IllegalArgumentException::class.java) {
+            function.calc(param)
+        }
     }
 }

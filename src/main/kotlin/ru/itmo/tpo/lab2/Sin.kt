@@ -5,7 +5,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Sin(private val cos: Cos) : Calculator {
+class Sin(private val cos: Cos, val precision: Double = DEFAULT_PRECISION) : Calculator {
 
     private fun prepare(x: Double): Double {
         require(x.isFinite())
