@@ -1,10 +1,19 @@
 package ru.ifmo.tpo.lab2
 
+import org.junit.jupiter.params.provider.Arguments
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import ru.itmo.tpo.lab2.*
+import java.util.stream.Stream
 
-
+class TestUtils {
+    companion object {
+        @JvmStatic
+        fun getTestValues(testData: Map<Double, Double>): Stream<Arguments> {
+            return testData.mapNotNull { Arguments.of(it.key, it.value) }.stream()
+        }
+    }
+}
 val logExprStub: LogExpr = mock(LogExpr::class.java).apply {
     `when`(this.calc(2.0)).thenReturn(-0.03838195)
 
@@ -12,6 +21,11 @@ val logExprStub: LogExpr = mock(LogExpr::class.java).apply {
 
 val trigExprStub: TrigonometricExpr = mock(TrigonometricExpr::class.java).apply {
 
+}
+val cosTestData = mapOf(0.0 to 1.0, )
+
+val cosStub2 = mock(Cos::class.java).apply {
+    cosTestData.forEach { (x, y) -> `when`(this.calc(x)).thenReturn(y) }
 }
 
 val cosStub: Cos = mock(Cos::class.java).apply {
@@ -239,37 +253,15 @@ val sinStub: Sin = mock(Sin::class.java).apply {
     `when`(this.calc(-0.7)).thenReturn(-0.644217687237691)
     `when`(this.calc(-0.4)).thenReturn(-0.3894183423086505)
 }
+    //val log3TestData = mapOf(0.0 to 1.0, 0.1 to , 0.2 to , 0.3 to , 0.4 to , 0.5 to
+    //    , 0.6 to , 0.7 to , 0.8 to , 0.9 to  )
 
-val log3Stub: Log3 = mock(Log3::class.java).apply {
-    `when`(this.calc(0.02)).thenReturn(-3.5608767950073115)
-    `when`(this.calc(0.1)).thenReturn(-2.0959032742893844)
-    `when`(this.calc(0.2)).thenReturn(-1.4649735207179269)
-    `when`(this.calc(0.3)).thenReturn(-1.0959032742893846)
-    `when`(this.calc(0.4)).thenReturn(-0.8340437671464696)
-    `when`(this.calc(0.5)).thenReturn(-0.6309297535714574)
-    `when`(this.calc(0.55)).thenReturn(-0.5441746892167039)
-    `when`(this.calc(0.6)).thenReturn(-0.4649735207179272)
-    `when`(this.calc(0.7)).thenReturn(-0.32465952512796237)
-    `when`(this.calc(0.8)).thenReturn(-0.20311401357501224)
-    `when`(this.calc(0.9)).thenReturn(-0.09590327428938458)
-    `when`(this.calc(1.0)).thenReturn(0.0)
-    `when`(this.calc(1.05)).thenReturn(0.04441072130058025)
-    `when`(this.calc(1.1)).thenReturn(0.08675506435475354)
-    `when`(this.calc(1.15)).thenReturn(0.127216802339429)
-    `when`(this.calc(1.2)).thenReturn(0.16595623285353023)
-    `when`(this.calc(1.3)).thenReturn(0.23881424518340807)
-    `when`(this.calc(1.5)).thenReturn(0.3690702464285425)
-    `when`(this.calc(1.75)).thenReturn(0.5093842420185073)
-    `when`(this.calc(1.8)).thenReturn(0.5350264792820728)
-    `when`(this.calc(1.9)).thenReturn(0.5842405849569906)
-    `when`(this.calc(2.0)).thenReturn(0.6309297535714574)
-    `when`(this.calc(2.1)).thenReturn(0.6753404748720376)
-    `when`(this.calc(2.5)).thenReturn(0.8340437671464697)
-    `when`(this.calc(3.0)).thenReturn(1.0)
-    `when`(this.calc(5.0)).thenReturn(1.4649735207179269)
-    `when`(this.calc(10.0)).thenReturn(2.095903274289385)
-    `when`(this.calc(20.0)).thenReturn(2.7268330278608417)
-    `when`(this.calc(100.0)).thenReturn(4.19180654857877)
+val log3TestData = mapOf(0.1 to -2.095903274, 0.2 to -1.464973521, 0.3 to -1.095903274,
+    0.4 to -0.8340437671 , 0.5 to -0.6309297536, 0.6 to -0.4649735207, 0.7 to -0.3246595251,
+    0.8 to -0.2031140136, 0.9 to -0.09590327429)
+
+val log3Stub = mock(Log3::class.java).apply {
+    log3TestData.forEach { (x, y) -> `when`(this.calc(x)).thenReturn(y) }
 }
 
 val log5Stub: Log5 = mock(Log5::class.java).apply {
