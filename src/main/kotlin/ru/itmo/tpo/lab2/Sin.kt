@@ -17,6 +17,6 @@ class Sin(private val cos: Cos) : Calculator {
     override fun calc(param: Double): Double {
         val x = prepare(param)
         val result = sqrt(abs(1 - cos.calc(param).pow(2)))
-        return if (abs(x) <= PI / 2 || abs(x) >= 3 * PI / 2) result else -result
+        return if (x >= PI && x <= 2 * PI || x >= -PI && x <= 0) -result else result
     }
 }

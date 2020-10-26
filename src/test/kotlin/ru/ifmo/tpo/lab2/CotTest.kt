@@ -3,7 +3,6 @@ package ru.ifmo.tpo.lab2
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import ru.itmo.tpo.lab2.Cos
 import ru.itmo.tpo.lab2.Cot

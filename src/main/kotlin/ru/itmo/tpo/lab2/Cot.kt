@@ -1,32 +1,24 @@
 package ru.itmo.tpo.lab2
 
 import kotlin.math.PI
-import kotlin.math.abs
 
 class Cot(
     private val cos: Cos,
     private val sin: Sin
 ) : Calculator {
 
-    private fun prepare(x: Double): Double {
-        require(x.isFinite())
-        require(x % PI != 0.0)
-        return abs(x) % (PI)
-    }
-
     @Throws(IllegalArgumentException::class)
     override fun calc(param: Double): Double {
-        val x = prepare(param)
-        val result = cos.calc(param) / sin.calc(param)
-        return if (abs(x) <= PI / 2) result else -result
+        require(param % PI != 0.0)
+        return cos.calc(param) / sin.calc(param)
     }
 }
 
-//fun main() {
-//    val cot = Cot(1e-6)
-//    println(cot.calc(5 * PI))
+fun main() {
+    val cot = Cot(Cos(), Sin(Cos()))
+    println(cot.calc(0.0))
 //    println(cot.calc(2 * PI / 3))
 //    println(cot.calc(PI / 3))
 //    println(cot.calc(5 * PI / 6))
 //    println(cot.calc(PI / 6))
-//}
+}
