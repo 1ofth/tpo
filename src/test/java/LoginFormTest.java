@@ -23,84 +23,152 @@ import java.util.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 public class LoginFormTest {
-    private WebDriver driver;
-    private Map<String, Object> vars;
-    JavascriptExecutor js;
-    @Before
-    public void setUp() {
-        driver = new ChromeDriver();
-        js = (JavascriptExecutor) driver;
-        vars = new HashMap<String, Object>();
+  private WebDriver driver;
+  private Map<String, Object> vars;
+  JavascriptExecutor js;
+  @Before
+  public void setUp() {
+    driver = new ChromeDriver();
+    js = (JavascriptExecutor) driver;
+    vars = new HashMap<String, Object>();
+  }
+  @After
+  public void tearDown() {
+    driver.quit();
+  }
+  @Test
+  public void loginSuccess() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1200, 952));
+    driver.findElement(By.xpath("//input[@name=\'username\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'username\']")).sendKeys("brm812");
+    driver.findElement(By.xpath("//input[@name=\'password\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'password\']")).sendKeys("lab3_tpo");
+    driver.findElement(By.xpath("(//button[@type=\'submit\'])[2]")).click();
+    assertThat(driver.findElement(By.xpath("//div[2]/div/a")).getText(), is("brm82"));
+  }
+  @Test
+  public void loginFails() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1200, 952));
+    driver.findElement(By.xpath("//input[@name=\'username\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'username\']")).sendKeys("not_existing_login_tpo3");
+    driver.findElement(By.xpath("//input[@name=\'password\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'password\']")).sendKeys("any_password");
+    driver.findElement(By.xpath("(//button[@type=\'submit\'])[2]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//form[@id=\'signin-form\']/div[4]"));
+      assert(elements.size() > 0);
     }
-    @After
-    public void tearDown() {
-        driver.quit();
+    assertThat(driver.findElement(By.xpath("//form[@id=\'signin-form\']/div[4]")).getText(), is("Ошибка. Вы ввели неверные данные авторизации"));
+  }
+  @Test
+  public void loginMinLength() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1200, 952));
+    driver.findElement(By.xpath("//input[@name=\'username\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'username\']")).sendKeys("12");
+    driver.findElement(By.xpath("//input[@name=\'password\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'password\']")).sendKeys("11111");
+    driver.findElement(By.xpath("(//button[@type=\'submit\'])[2]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//body/div[4]/div/div/div/div/div"));
+      assert(elements.size() > 0);
     }
-/*    @Test
-    public void loginSuccess() {
-        driver.get("https://pikabu.ru/");
-        driver.manage().window().setSize(new Dimension(1200, 952));
-        driver.findElement(By.xpath("//input[@name=\'username\']")).click();
-        driver.findElement(By.xpath("//input[@name=\'username\']")).sendKeys("happy_chicken");
-        driver.findElement(By.xpath("//input[@name=\'password\']")).click();
-        driver.findElement(By.xpath("//input[@name=\'password\']")).sendKeys("lab3_tpo_pass");
-        driver.findElement(By.xpath("(//button[@type=\'submit\'])[2]")).click();
-        assertThat(driver.findElement(By.xpath("//div[2]/div/a")).getText(), is("brm82"));
+    assertThat(driver.findElement(By.xpath("//body/div[4]/div/div/div/div/div")).getText(), is("Минимальная длина 3 символа"));
+  }
+  @Test
+  public void fbLoginFormAppears() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1200, 952));
+    driver.findElement(By.xpath("//a[contains(@href, \'https://pikabu.ru/oauth.php?type=fb\')]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'login_link\']"));
+      assert(elements.size() > 0);
     }
-    @Test
-    public void loginFails() {
-        driver.get("https://pikabu.ru/");
-        driver.manage().window().setSize(new Dimension(1200, 952));
-        driver.findElement(By.xpath("//input[@name=\'username\']")).click();
-        driver.findElement(By.xpath("//input[@name=\'username\']")).sendKeys("not_existing_login_tpo3");
-        driver.findElement(By.xpath("//input[@name=\'password\']")).click();
-        driver.findElement(By.xpath("//input[@name=\'password\']")).sendKeys("any_password");
-        driver.findElement(By.xpath("(//button[@type=\'submit\'])[2]")).click();
-        {
-            List<WebElement> elements = driver.findElements(By.xpath("//form[@id=\'signin-form\']/div[4]"));
-            assert(elements.size() > 0);
-        }
-        assertThat(driver.findElement(By.xpath("//form[@id=\'signin-form\']/div[4]")).getText(), is("Ошибка. Вы ввели неверные данные авторизации"));
-    }*/
-    @Test
-    public void loginMinLength() {
-        driver.get("https://pikabu.ru/");
-        driver.manage().window().setSize(new Dimension(1200, 952));
-        driver.findElement(By.xpath("//input[@name=\'username\']")).click();
-        driver.findElement(By.xpath("//input[@name=\'username\']")).sendKeys("12");
-        driver.findElement(By.xpath("//input[@name=\'password\']")).click();
-        driver.findElement(By.xpath("//input[@name=\'password\']")).sendKeys("11111");
-        driver.findElement(By.xpath("(//button[@type=\'submit\'])[2]")).click();
-        {
-            List<WebElement> elements = driver.findElements(By.xpath("//div[5]/div/div/div/div/div"));
-            assert(elements.size() > 0);
-        }
-        assertThat(driver.findElement(By.xpath("//div[5]/div/div/div/div/div")).getText(), is("Минимальная длина 3 символа"));
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'content\']/div/div"));
+      assert(elements.size() > 0);
     }
-    @Test
-    public void fbLoginFormAppears() {
-        driver.get("https://pikabu.ru/");
-        driver.manage().window().setSize(new Dimension(1200, 952));
-        driver.findElement(By.xpath("//a[contains(@href, \'https://pikabu.ru/oauth.php?type=fb\')]")).click();
-        {
-            List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'login_link\']"));
-            assert(elements.size() > 0);
-        }
-        {
-            List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'content\']/div/div"));
-            assert(elements.size() > 0);
-        }
-        assertThat(driver.findElement(By.xpath("//div[@id=\'header_block\']/span/div")).getText(), is("Log in to Facebook"));
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//i[contains(.,\'Facebook\')]"));
+      assert(elements.size() > 0);
     }
-    @Test
-    public void vkLoginFormAppears() {
-        driver.get("https://pikabu.ru/");
-        driver.manage().window().setSize(new Dimension(1200, 952));
-        driver.findElement(By.xpath("//a[contains(@href, \'https://pikabu.ru/oauth.php?type=vk\')]")).click();
-        {
-            List<WebElement> elements = driver.findElements(By.xpath("//form[@id=\'login_submit\']/div"));
-            assert(elements.size() > 0);
-        }
-        assertThat(driver.findElement(By.xpath("//div[@id=\'oauth_wrap_content\']/div[2]/div")).getText(), is("Log into VK to continue."));
+  }
+  @Test
+  public void vkLoginFormAppears() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1200, 952));
+    driver.findElement(By.xpath("//a[contains(@href, \'https://pikabu.ru/oauth.php?type=vk\')]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//a[contains(@href, \'https://vk.com\')]"));
+      assert(elements.size() > 0);
     }
+  }
+  @Test
+  public void gLoginFormAppears() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//a[contains(@href, \'https://pikabu.ru/oauth.php?type=google\')]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'initialView\']/div[2]"));
+      assert(elements.size() > 0);
+    }
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div[@id=\'initialView\']/div[2]/div/div/div"));
+      assert(elements.size() > 0);
+    }
+  }
+  @Test
+  public void twLoginFormAppears() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1200, 952));
+    driver.findElement(By.xpath("//a[contains(@href, \'https://pikabu.ru/oauth.php?type=tw\')]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//a[contains(@href, \'https://twitter.com/home\')]"));
+      assert(elements.size() > 0);
+    }
+  }
+  @Test
+  public void logOut() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div/div/div/div[2]/div[2]"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//div/div/div/div[2]/div[2]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div/div[2]/button"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//div/div[2]/button")).click();
+  }
+  @Test
+  public void passwordRecovery() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//form[@id=\'signin-form\']/div[5]/span")).click();
+    assertThat(driver.findElement(By.xpath("//aside/div/div/div/div[3]/div")).getText(), is("Восстановление пароля"));
+    assertThat(driver.findElement(By.xpath("//div[4]/button/span")).getText(), is("ПРИСЛАТЬ ПАРОЛЬ"));
+  }
+  @Test
+  public void registrationSuccess() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//form[@id=\'signin-form\']/div[7]/span")).click();
+    driver.findElement(By.xpath("(//input[@name=\'username\'])[2]")).sendKeys("karishakarinka");
+    driver.findElement(By.xpath("//input[@name=\'phone\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'phone\']")).sendKeys("89112461112");
+    driver.findElement(By.xpath("//input[@name=\'email\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'email\']")).sendKeys("karkhus999@gmail.com");
+    driver.findElement(By.xpath("(//input[@name=\'password\'])[2]")).click();
+    driver.findElement(By.xpath("(//input[@name=\'password\'])[2]")).sendKeys("schtschschtschkarinka99");
+    driver.findElement(By.xpath("//div[8]/button/span")).click();
+    {
+      WebDriverWait wait = new WebDriverWait(driver, 2);
+      wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[6]/div/div/div/div")));
+    }
+    assertThat(driver.findElement(By.xpath("//div[6]/div/div/div/div")).getText(), is("Введите код из SMS сообщения"));
+  }
 }

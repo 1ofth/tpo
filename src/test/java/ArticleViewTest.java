@@ -36,11 +36,18 @@ public class ArticleViewTest {
   public void tearDown() {
     driver.quit();
   }
-  @Test
-  public void articleExpand() {
-    driver.get("https://pikabu.ru/");
-    driver.manage().window().setSize(new Dimension(1792, 1002));
-    js.executeScript("window.scrollTo(0,27)");
+  public String waitForWindow(int timeout) {
+    try {
+      Thread.sleep(timeout);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    Set<String> whNow = driver.getWindowHandles();
+    Set<String> whThen = (Set<String>) vars.get("window_handles");
+    if (whNow.size() > whThen.size()) {
+      whNow.removeAll(whThen);
+    }
+    return whNow.iterator().next();
   }
   @Test
   public void articleFeed() {
@@ -60,12 +67,89 @@ public class ArticleViewTest {
     }
   }
   @Test
-  public void articleRating() {
+  public void articleFeedSortingByDate() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//section/div/span")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//span[contains(.,\'Сортировать по времени\')]"));
+      assert(elements.size() > 0);
+    }
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//span[contains(.,\'Выбрать дату\')]"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//span[contains(.,\'Выбрать дату\')]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div/div[2]/button"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//div/div[2]/button")).click();
+    driver.findElement(By.xpath("//section/div/span")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//span[contains(.,\'Случайная дата\')]"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//span[contains(.,\'Случайная дата\')]")).click();
+  }
+  @Test
+  public void articleSearchByName() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    driver.findElement(By.xpath("//input[@name=\'q\']")).sendKeys("Грустный юмор");
+    driver.findElement(By.xpath("//i[contains(.,\'Показать все результаты\')]")).click();
+    {
+      WebDriverWait wait = new WebDriverWait(driver, 3);
+      wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[2]/header")));
+    }
+    vars.put("name", driver.findElement(By.xpath("//a[contains(text(),\'Грустный юмор\')]")).getText());
+    assertThat(driver.findElement(By.xpath("(//a[contains(text(),\'Грустный юмор\')])[2]")).getText(), is("vars.get(\"name\").toString()"));
+  }
+  @Test
+  public void articleSearchByTags() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    driver.findElement(By.name("q")).click();
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//section[2]"));
+      assert(elements.size() > 0);
+    }
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//section[2]/div/div"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//section[2]/div/div")).click();
+    driver.findElement(By.xpath("(//input[@value=\'\'])[2]")).sendKeys("Черный");
+    driver.findElement(By.xpath("//div/div/div/div/div/div[2]/div/div")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//span[contains(.,\'Черный юмор\')]"));
+      assert(elements.size() > 0);
+    }
+    vars.put("tag", driver.findElement(By.xpath("//div/span/span")).getText());
+    {
+      WebDriverWait wait = new WebDriverWait(driver, 3);
+      wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//article/div[2]")));
+    }
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//article/div[2]"));
+      assert(elements.size() > 0);
+    }
+    assertThat(driver.findElement(By.xpath("//a[contains(text(),\'Черный юмор\')]")).getText(), is("vars.get(\"tag\").toString()"));
+  }
+  @Test
+  public void commentDay() {
     driver.get("https://pikabu.ru/");
     driver.manage().window().setSize(new Dimension(1792, 1002));
-    driver.findElement(By.xpath("//article/div/div/div/div")).click();
     {
-      WebDriverWait wait = new WebDriverWait(driver, 1);
+      List<WebElement> elements = driver.findElements(By.xpath("//h4[contains(.,\'Комментарий дня\')]"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//div[3]/button/span")).click();
+    {
+      WebDriverWait wait = new WebDriverWait(driver, 3);
       wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[4]/div/div")));
     }
     {
@@ -74,21 +158,137 @@ public class ArticleViewTest {
     }
   }
   @Test
-  public void articleRollUp() {
+  public void followBestPostsByEmail() {
     driver.get("https://pikabu.ru/");
-    driver.manage().window().setSize(new Dimension(1792, 1002));
+    driver.manage().window().setSize(new Dimension(1440, 960));
     {
-      List<WebElement> elements = driver.findElements(By.xpath("//article/div[2]/div/div"));
-      assert(elements.size() > 0);
-    }
-    driver.findElement(By.xpath("//article/div/div/div[2]")).click();
-    {
-      List<WebElement> elements = driver.findElements(By.xpath("//article/div[2]"));
+      List<WebElement> elements = driver.findElements(By.xpath("//aside/div[2]/div/div"));
       assert(elements.size() > 0);
     }
     {
-      List<WebElement> elements = driver.findElements(By.xpath("//article/div[2]/div/div"));
-      assert(elements.size() == 0);
+      List<WebElement> elements = driver.findElements(By.xpath("//aside/div[2]/div/form/div/button"));
+      assert(elements.size() > 0);
     }
+    driver.findElement(By.xpath("(//input[@name=\'email\'])[2]")).click();
+    driver.findElement(By.xpath("(//input[@name=\'email\'])[2]")).sendKeys("karkhus999@gmail.com");
+    driver.findElement(By.xpath("//aside/div[2]/div/form/div/button")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//aside/div[2]/div[2]/div"));
+      assert(elements.size() > 0);
+    }
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//div[2]/div[2]/div[2]"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//div[6]")).click();
+    driver.findElement(By.xpath("//div[2]/div/p")).click();
+    vars.put("thanks", driver.findElement(By.xpath("//div[2]/div/p")).getText());
+    assertThat(driver.findElement(By.xpath("//div[2]/div/p")).getText(), is("vars.get(\"thanks\").toString()"));
+  }
+  @Test
+  public void articleCommentsCheck() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//article/div[2]/div[3]"));
+      assert(elements.size() > 0);
+    }
+    vars.put("window_handles", driver.getWindowHandles());
+    driver.findElement(By.cssSelector(".story:nth-child(1) .story__comments-link-count")).click();
+    vars.put("win4988", waitForWindow(2000));
+    driver.switchTo().window(vars.get("win4988").toString());
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//a[contains(text(),\'Все комментарии\')]"));
+      assert(elements.size() > 0);
+    }
+  }
+  @Test
+  public void articleEmotionsCheck() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//article/div[2]/div[3]/div[3]"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//article/div[2]/div[3]/div[3]")).click();
+  }
+  @Test
+  public void copyArticleAddress() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//article/div[2]/div[3]/div/div[2]")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.xpath("//a[contains(text(),\'Скопировать ссылку\')]"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.xpath("//a[contains(text(),\'Скопировать ссылку\')]")).click();
+  }
+  @Test
+  public void articleSearchByCommunity() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    driver.findElement(By.name("q")).click();
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    driver.findElement(By.xpath("//section[2]/div[4]/div")).click();
+    driver.findElement(By.xpath("(//input[@value=\'\'])[5]")).sendKeys("Юмор");
+    driver.findElement(By.xpath("//div[2]/div/div[2]/div/a/span")).click();
+    vars.put("community", driver.findElement(By.xpath("//span/span[2]")).getText());
+    assertThat(driver.findElement(By.xpath("//span/a")).getText(), is("vars.get(\"community\").toString()"));
+  }
+  @Test
+  public void articleSearchByAuthor() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    driver.findElement(By.name("q")).click();
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    driver.findElement(By.xpath("//span[contains(.,\'Автор\')]")).click();
+    driver.findElement(By.xpath("(//input[@value=\'\'])[4]")).click();
+    driver.findElement(By.xpath("(//input[@value=\'\'])[4]")).sendKeys("pirazzi");
+    driver.findElement(By.xpath("//div[2]/div/div[2]/span")).click();
+    vars.put("author", driver.findElement(By.xpath("//span[contains(.,\'pirazzi\')]")).getText());
+    assertThat(driver.findElement(By.xpath("//header/div/div/a")).getText(), is("vars.get(\"author\").toString()"));
+  }
+  @Test
+  public void sendArticle() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    js.executeScript("window.scrollTo(0,95.46666717529297)");
+    assertThat(driver.findElement(By.xpath("//article/div[2]/div[3]/div/div[2]")).getText(), is("Поделиться"));
+    driver.findElement(By.xpath("//article/div[2]/div[3]/div/div[2]")).click();
+  }
+  @Test
+  public void articleFullFormatCheck() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.cssSelector("form > button")).click();
+    driver.findElement(By.xpath("//button[@type=\'submit\']")).click();
+    driver.findElement(By.xpath("(//input[@name=\'q\'])[2]")).sendKeys("Мошеннические списания на IHerb");
+    driver.findElement(By.xpath("//input[@name=\'q\']")).sendKeys(Keys.ENTER);
+    driver.findElement(By.xpath("//button[@id=\'search_stories_button\']")).click();
+    {
+      WebDriverWait wait = new WebDriverWait(driver, 3);
+      wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[2]/header")));
+    }
+    assertThat(driver.getTitle(), is("Мошеннические списания на IHerb - Поиск"));
+    vars.put("window_handles", driver.getWindowHandles());
+    driver.findElement(By.xpath("//a[contains(text(),\'Мошеннические списания на iHerb\')]")).click();
+    vars.put("win566", waitForWindow(2000));
+    vars.put("root", driver.getWindowHandle());
+    driver.switchTo().window(vars.get("win566").toString());
+    assertThat(driver.getTitle(), is("Мошеннические списания на iHerb | Пикабу"));
+  }
+  @Test
+  public void changeTheme() {
+    driver.get("https://pikabu.ru/");
+    driver.manage().window().setSize(new Dimension(1440, 960));
+    driver.findElement(By.cssSelector(".theme-picker")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.cssSelector(".popup__content"));
+      assert(elements.size() > 0);
+    }
+    driver.findElement(By.cssSelector(".theme-picker")).click();
+    driver.findElement(By.cssSelector(".theme-picker__button:nth-child(2)")).click();
   }
 }
